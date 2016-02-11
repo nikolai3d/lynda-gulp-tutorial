@@ -55,3 +55,5 @@ gulp.task('compass', function() {
 
     srcNode.pipe(compassNode).pipe(destNode);
 });
+
+gulp.task('default', ['coffee', 'js', 'compass']);
