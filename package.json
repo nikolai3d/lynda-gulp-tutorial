@@ -1,0 +1,11 @@
+{
+  "name": "workflows-wip",
+  "version": "0.1.0",
+  "description": "Workflows with GULP training",
+  "repository": {
+    "type": "git",
+    "url": "?.git"
+  },
+  "author": "Nikolai Svakhin",
+  "license": "ISC"
+}
