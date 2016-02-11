@@ -8,11 +8,11 @@ gulp.task('log', function() {
 
 
 gulp.task('coffee', function() {
-
-    gulp.src('components/coffee/tagline.coffee')
-        .pipe(gcoffee({
-                bare: true
-            })
-            .on('error', gutil.log))
-        .pipe(gulp.dest('components/scripts'));
+    
+    var srcNode =  gulp.src('components/coffee/tagline.coffee');
+    var processNode = gcoffee({bare: true}).on('error', gutil.log);
+    var destNode = gulp.dest('components/scripts');
+    
+    srcNode.pipe(processNode).pipe(destNode);
+    
 });
