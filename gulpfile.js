@@ -2,7 +2,8 @@ var gulp = require('gulp'),
     gutil = require('gulp-util'),
     gcoffee = require("gulp-coffee"),
     gconcat = require("gulp-concat"),
-    browserify = require("gulp-browserify");
+    browserify = require("gulp-browserify"), 
+    compass = require("gulp-compass");
     
     
 gulp.task('log', function() {
@@ -17,6 +18,8 @@ var jsSources = [
     'components/scripts/template.js'
     ];
 
+var sassSources = ['components/sass/style.scss'];
+ 
 
 gulp.task('coffee', function() {
     
@@ -38,4 +41,17 @@ gulp.task('js', function() {
     var destNode = gulp.dest('builds/development/js');
 
     srcNode.pipe(concatNode).pipe(browserifyNode).pipe(destNode);
+});
+
+gulp.task('compass', function() {
+    var srcNode = gulp.src(sassSources);
+    
+    var compassNode = compass({sass: 'components/sass', 
+        image: 'builds/development/images',
+        style: 'expanded'
+    }).on('error', gutil.log);
+    
+    var destNode = gulp.dest('builds/development/css');
+
+    srcNode.pipe(compassNode).pipe(destNode);
 });

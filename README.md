@@ -31,4 +31,7 @@ Dependency installation:
     * gem install compass
     * npm install --save-dev gulp (to install as dev-dependency)
     * npm install --save-dev gulp-util
-    
+    * npm install --save-dev gulp-browserify
+    * npm install --save-dev jquery
+    * npm install --save-dev mustache
+    * npm install --save-dev gulp-compass
