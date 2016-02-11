@@ -35,3 +35,4 @@ Dependency installation:
     * npm install --save-dev jquery
     * npm install --save-dev mustache
     * npm install --save-dev gulp-compass
+    * npm install --save-dev gulp-connect
