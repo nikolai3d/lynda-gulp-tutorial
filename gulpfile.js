@@ -1,7 +1,9 @@
 var gulp = require('gulp'),
     gutil = require('gulp-util'),
     gcoffee = require("gulp-coffee"),
-    gconcat = require("gulp-concat");
+    gconcat = require("gulp-concat"),
+    browserify = require("gulp-browserify");
+    
     
 gulp.task('log', function() {
     gutil.log('works workflows are awesome');
@@ -26,14 +28,14 @@ gulp.task('coffee', function() {
     
 });
 
-gulp.task('js', function(){
+gulp.task('js', function() {
     var srcNode = gulp.src(jsSources);
     
     var concatNode = gconcat('script.js');
     
+    var browserifyNode = browserify();
+    
     var destNode = gulp.dest('builds/development/js');
 
-    srcNode.pipe(concatNode).pipe(destNode);
-    
-    
+    srcNode.pipe(concatNode).pipe(browserifyNode).pipe(destNode);
 });
