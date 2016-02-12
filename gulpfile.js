@@ -7,6 +7,7 @@ var gulp = require('gulp'),
     gulpif = require("gulp-if"),
     uglify = require("gulp-uglify"),
     minifyHTML = require("gulp-minify-html"),
+    minifyJSON = require("gulp-jsonminify"),
     compass = require("gulp-compass");
 
 var env,
@@ -109,7 +110,10 @@ gulp.task('html', function() {
 });
 
 gulp.task('json', function() {
-    gulp.src(jsonData).pipe(connect.reload());
+    gulp.src(jsonData).
+    pipe(gulpif(env === 'production', minifyJSON())).
+    pipe(gulpif(env === 'production', gulp.dest(outputDir+"js"))).
+    pipe(connect.reload());
 });
 
 gulp.task('default', ['coffee', 'js', 'compass', 'html', 'json', 'connect', 'watch']);
