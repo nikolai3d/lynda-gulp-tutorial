@@ -6,24 +6,40 @@ var gulp = require('gulp'),
     connect = require("gulp-connect"),
     compass = require("gulp-compass");
 
+var env,
+    coffeeSources,
+    jsSources,
+    htmlSources,
+    jsonData,
+    sassSources,
+    outputDir;
 
-gulp.task('log', function() {
-    gutil.log('works workflows are awesome');
-});
+env = process.env.NODE_ENV || 'development';
 
-var coffeeSources = ['components/coffee/tagline.coffee'];
-var jsSources = [
+gutil.log("ENV === '" + env+ "'");
+
+if (env === 'development') {
+    outputDir = "builds/development/";
+}
+else {
+    outputDir = 'builds/production/';
+}
+
+coffeeSources = ['components/coffee/tagline.coffee'];
+
+jsSources = [
     'components/scripts/rclick.js',
     'components/scripts/pixgrid.js',
     'components/scripts/tagline.js',
     'components/scripts/template.js'
 ];
 
-var sassSources = ['components/sass/style.scss'];
+sassSources = ['components/sass/style.scss'];
 
-var htmlSources = ['builds/development/*.html'];
+htmlSources = [outputDir + '*.html'];
 
-var jsonData = ['builds/development/js/*.json'];
+jsonData = [outputDir + 'js/*.json'];
+
 gulp.task('coffee', function() {
 
     var srcNode = gulp.src(coffeeSources);
@@ -43,7 +59,7 @@ gulp.task('js', function() {
 
     var browserifyNode = browserify();
 
-    var destNode = gulp.dest('builds/development/js');
+    var destNode = gulp.dest(outputDir + 'js');
 
     srcNode.pipe(concatNode).pipe(browserifyNode).pipe(destNode).pipe(connect.reload());
 });
@@ -53,11 +69,11 @@ gulp.task('compass', function() {
 
     var compassNode = compass({
         sass: 'components/sass',
-        image: 'builds/development/images',
+        image: outputDir + 'images',
         style: 'expanded'
     }).on('error', gutil.log);
 
-    var destNode = gulp.dest('builds/development/css');
+    var destNode = gulp.dest(outputDir + 'css');
 
     srcNode.pipe(compassNode).pipe(destNode).pipe(connect.reload());
 });
@@ -68,22 +84,22 @@ gulp.task('watch', function() {
     gulp.watch('components/sass/*.scss', ['compass']);
     gulp.watch(htmlSources, ['html']);
     gulp.watch(jsonData, ['json']);
-    
+
 });
 
 gulp.task('connect', function() {
-   connect.server({
-       root: 'builds/development/',
-       livereload: true
-   }); 
+    connect.server({
+        root: outputDir,
+        livereload: true
+    });
 });
 
 gulp.task('html', function() {
-   gulp.src(htmlSources).pipe(connect.reload());
+    gulp.src(htmlSources).pipe(connect.reload());
 });
 
 gulp.task('json', function() {
-   gulp.src(jsonData).pipe(connect.reload());
+    gulp.src(jsonData).pipe(connect.reload());
 });
 
 gulp.task('default', ['coffee', 'js', 'compass', 'html', 'json', 'connect', 'watch']);
