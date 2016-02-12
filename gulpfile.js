@@ -12,7 +12,8 @@ var env,
     htmlSources,
     jsonData,
     sassSources,
-    outputDir;
+    outputDir, 
+    sassStyle;
 
 env = process.env.NODE_ENV || 'development';
 
@@ -20,9 +21,11 @@ gutil.log("ENV === '" + env+ "'");
 
 if (env === 'development') {
     outputDir = "builds/development/";
+    sassStyle = 'expanded';
 }
 else {
-    outputDir = 'builds/production/';
+    outputDir = "builds/production/";
+    sassStyle = 'compressed';
 }
 
 coffeeSources = ['components/coffee/tagline.coffee'];
@@ -65,17 +68,17 @@ gulp.task('js', function() {
 });
 
 gulp.task('compass', function() {
-    var srcNode = gulp.src(sassSources);
-
-    var compassNode = compass({
+    
+    gulp.src(sassSources).pipe(compass({
         sass: 'components/sass',
-        image: outputDir + 'images',
-        style: 'expanded'
-    }).on('error', gutil.log);
+        image: 'builds/development/' + 'images',
+        style: sassStyle
+    }).on('error', gutil.log)).pipe(gulp.dest(outputDir + 'css'));
+    
 
-    var destNode = gulp.dest(outputDir + 'css');
+    gutil.log("COMPASS dest === '" + outputDir + 'css'+ "'");
 
-    srcNode.pipe(compassNode).pipe(destNode).pipe(connect.reload());
+//.pipe(connect.reload());
 });
 
 gulp.task('watch', function() {
