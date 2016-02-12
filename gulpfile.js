@@ -4,6 +4,8 @@ var gulp = require('gulp'),
     gconcat = require("gulp-concat"),
     browserify = require("gulp-browserify"),
     connect = require("gulp-connect"),
+    gulpif = require("gulp-if"),
+    uglify = require("gulp-uglify"),
     compass = require("gulp-compass");
 
 var env,
@@ -64,7 +66,8 @@ gulp.task('js', function() {
 
     var destNode = gulp.dest(outputDir + 'js');
 
-    srcNode.pipe(concatNode).pipe(browserifyNode).pipe(destNode).pipe(connect.reload());
+    srcNode.pipe(concatNode).pipe(browserifyNode).pipe(gulpif(env === 'production', uglify()))
+    .pipe(destNode).pipe(connect.reload());
 });
 
 gulp.task('compass', function() {
