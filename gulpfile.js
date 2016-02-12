@@ -9,6 +9,11 @@ var gulp = require('gulp'),
     minifyHTML = require("gulp-minify-html"),
     minifyJSON = require("gulp-jsonminify"),
     compass = require("gulp-compass");
+    
+//Image compression
+
+var imgmin= require("gulp-imagemin"),
+    pngcrush = require("imagemin-pngcrush");
 
 var env,
     coffeeSources,
@@ -92,6 +97,7 @@ gulp.task('watch', function() {
     gulp.watch('components/sass/*.scss', ['compass']);
     gulp.watch(htmlSources, ['html']);
     gulp.watch(jsonData, ['json']);
+    gulp.watch('builds/development/images/**/*.*', ['images']);
 
 });
 
@@ -109,6 +115,20 @@ gulp.task('html', function() {
     pipe(connect.reload());
 });
 
+
+gulp.task('images', function() {
+   gulp.src('builds/development/images/**/*.*').
+    pipe(gulpif(env === 'production', imgmin({
+        progressive: true,
+        svgoPlugins: [{ removeViewBox: false }],
+        use: [pngcrush()]
+    }))).
+    pipe(gulpif(env === 'production', gulp.dest(outputDir+"images"))).
+    pipe(connect.reload());
+
+});
+
+
 gulp.task('json', function() {
     gulp.src(jsonData).
     pipe(gulpif(env === 'production', minifyJSON())).
@@ -116,4 +136,4 @@ gulp.task('json', function() {
     pipe(connect.reload());
 });
 
-gulp.task('default', ['coffee', 'js', 'compass', 'html', 'json', 'connect', 'watch']);
+gulp.task('default', ['coffee', 'js', 'compass', 'html', 'json', 'images', 'connect', 'watch']);
